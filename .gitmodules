@@ -1,0 +1,3 @@
+[submodule "ELK-Docker-compose"]
+	path = ELK-Docker-compose
+	url = git@github.com:talhayameen/ELK-Docker-compose.git
