@@ -6,11 +6,11 @@ authors = ["ebreton <manu@ibimus.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Django = "3.2.6"
-django-elasticsearch-dsl = "7.2.0"
-djangorestframework = "3.12.4"
-elasticsearch = "7.14.0"
-elasticsearch-dsl = "7.4.0"
+Django = "^3.2"
+django-elasticsearch-dsl = "^7.2"
+djangorestframework = "^3.12"
+elasticsearch = "^7.14"
+elasticsearch-dsl = "^7.4"
 
 [tool.poetry.dev-dependencies]
 
