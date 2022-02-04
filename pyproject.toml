@@ -10,6 +10,7 @@ Django = "^4.0"
 django-elasticsearch-dsl = "^7.2"
 djangorestframework = "^3.13"
 django-grappelli = "^3.0.2"
+django-auth-adfs = "^1.9.4"
 
 [tool.poetry.dev-dependencies]
 
