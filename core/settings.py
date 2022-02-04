@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'grappelli',
     'django.contrib.admin',
+    # Needed for the ADFS redirect URI to function
+    'django_auth_adfs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -54,6 +56,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # optionnal for AD
+    # With this you can force a user to login without using
+    # the LoginRequiredMixin on every view class
+    #
+    # You can specify URLs for which login is not enforced by
+    # specifying them in the LOGIN_EXEMPT_URLS setting.
+    'django_auth_adfs.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -86,6 +95,45 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Connection with Azure AD
+# https://django-auth-adfs.readthedocs.io/en/latest/install.html
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_adfs.backend.AdfsAuthCodeBackend',
+)
+
+AUTH_ADFS = {
+    "TENANT_ID": "adfs.yourcompany.com",
+    "CLIENT_ID": "your-configured-client-id",
+    "RELYING_PARTY_ID": "your-adfs-RPT-name",
+    # Make sure to read the documentation about the AUDIENCE setting
+    # when you configured the identifier as a URL!
+    "AUDIENCE": "microsoft:identityserver:your-RelyingPartyTrust-identifier",
+    # False disables the certificate check.
+    "CA_BUNDLE": "/path/to/ca-bundle.pem",
+    # A dictionary of claim/field mappings that is used to set boolean fields on the user account in Django.
+    # If the value is any of y, yes, t, true, on, 1, the field will be set to True
+    "BOOLEAN_CLAIM_MAPPING": {
+        "is_staff": "user_is_staff",
+        "is_superuser": "user_is_superuser",
+    },
+    # The user’s details will be set according to this setting upon each login.
+    "CLAIM_MAPPING": {
+        "first_name": "given_name",
+        "last_name": "family_name",
+        "email": "email",
+    },
+    "BLOCK_GUEST_USERS": False,
+    "CREATE_NEW_USERS": True,
+}
+
+# Configure django to redirect users to the right URL for login
+LOGIN_URL = "django_auth_adfs:login"
+LOGIN_REDIRECT_URL = "/"
+
+# You can point login failures to a custom Django function based view for customization of the UI
+# CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
 
 
 # Password validation
