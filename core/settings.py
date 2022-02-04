@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -101,17 +102,23 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = (
     'django_auth_adfs.backend.AdfsAuthCodeBackend',
+    'django_auth_adfs.backend.AdfsAccessTokenBackend',
 )
 
+tenant_id = os.environ['TENANT_ID']
+client_id = os.environ['CLIENT_ID']
+client_secret = os.environ['CLIENT_SECRET']
+
 AUTH_ADFS = {
-    "TENANT_ID": "adfs.yourcompany.com",
-    "CLIENT_ID": "your-configured-client-id",
-    "RELYING_PARTY_ID": "your-adfs-RPT-name",
+    'TENANT_ID': tenant_id,
+    'CLIENT_ID': client_id,
+    'CLIENT_SECRET': client_secret,
+    'RELYING_PARTY_ID': client_id,
     # Make sure to read the documentation about the AUDIENCE setting
     # when you configured the identifier as a URL!
-    "AUDIENCE": "microsoft:identityserver:your-RelyingPartyTrust-identifier",
+    "AUDIENCE": client_id,
     # False disables the certificate check.
-    "CA_BUNDLE": "/path/to/ca-bundle.pem",
+    # "CA_BUNDLE": "/path/to/ca-bundle.pem",
     # A dictionary of claim/field mappings that is used to set boolean fields on the user account in Django.
     # If the value is any of y, yes, t, true, on, 1, the field will be set to True
     "BOOLEAN_CLAIM_MAPPING": {
@@ -124,13 +131,18 @@ AUTH_ADFS = {
         "last_name": "family_name",
         "email": "email",
     },
+    'GROUPS_CLAIM': 'roles',
+    'MIRROR_GROUPS': True,
+    'USERNAME_CLAIM': 'email',
     "BLOCK_GUEST_USERS": False,
     "CREATE_NEW_USERS": True,
+    # Prevent REST API from triggering a login redirect
+    "LOGIN_EXEMPT_URLS": ["^blog"],
 }
 
 # Configure django to redirect users to the right URL for login
 LOGIN_URL = "django_auth_adfs:login"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/blog"
 
 # You can point login failures to a custom Django function based view for customization of the UI
 # CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
@@ -186,6 +198,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'django_auth_adfs.rest_framework.AdfsAccessTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 25
 }
@@ -197,5 +213,30 @@ REST_FRAMEWORK = {
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': 'elastic:changeme@localhost:9200'
+    },
+}
+
+
+# DEBUG FOR AD FS
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(name)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django_auth_adfs': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
     },
 }
