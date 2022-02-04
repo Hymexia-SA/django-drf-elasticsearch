@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
     'blog.apps.BlogConfig',
@@ -119,6 +120,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+# Site management
+# https://docs.djangoproject.com/en/4.0/ref/contrib/sites/
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
