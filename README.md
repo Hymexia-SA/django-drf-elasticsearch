@@ -9,7 +9,7 @@ Check out the [post](https://testdriven.io/blog/django-drf-elasticsearch/).
 1. update git submodule
 
     ```sh
-    git submodule udate
+    git submodule update
     ```
 
 2. Install Elasticsearch
@@ -61,7 +61,16 @@ Check out the [post](https://testdriven.io/blog/django-drf-elasticsearch/).
     python manage.py runserver
     ```
 
-9. Test Elasticsearch with the following queries:
+9. Following URLs are available
+
+- to access all CRUD actions through REST API
+
+    - http://localhost:8000/blog/ (index)
+    - http://localhost:8000/blog/user/
+    - http://localhost:8000/blog/category/
+    - http://localhost:8000/blog/article
+
+- to search Elasticsearch with the following queries:
 
      - [http://127.0.0.1:8000/search/user/mike/](http://127.0.0.1:8000/search/user/mike/) - should find the user 'mike13'
      - [http://127.0.0.1:8000/search/user/jess_/](http://127.0.0.1:8000/search/user/jess_/) - should find the user 'jess_'
@@ -69,3 +78,7 @@ Check out the [post](https://testdriven.io/blog/django-drf-elasticsearch/).
      - [http://127.0.0.1:8000/search/category/progreming/](http://127.0.0.1:8000/search/category/progreming/) - should find the category 'Programming' (:warning: notice the typo)
      - [http://127.0.0.1:8000/search/article/linux/](http://127.0.0.1:8000/search/article/linux/) - should find the article 'Installing the latest version of Ubuntu'
      - [http://127.0.0.1:8000/search/article/java/](http://127.0.0.1:8000/search/article/java/) - should find the article 'Which programming language is the best?'
+
+- to access django admin
+
+    - http://localhost:8000/admin/
