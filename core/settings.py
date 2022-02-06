@@ -121,19 +121,23 @@ AUTH_ADFS = {
     # "CA_BUNDLE": "/path/to/ca-bundle.pem",
     # A dictionary of claim/field mappings that is used to set boolean fields on the user account in Django.
     # If the value is any of y, yes, t, true, on, 1, the field will be set to True
-    "BOOLEAN_CLAIM_MAPPING": {
-        "is_staff": "user_is_staff",
-        "is_superuser": "user_is_superuser",
+    # "BOOLEAN_CLAIM_MAPPING": {
+    #     "is_staff": "user_is_staff",
+    #     "is_superuser": "user_is_superuser",
+    # },
+    'GROUP_TO_FLAG_MAPPING': {
+        "is_staff": "da8c71d4-a605-4fad-83d9-3b8014afc0a4",
+        "is_superuser": "31d963b1-b7cf-4455-ab66-43973cfcbe1e",
     },
     # The user’s details will be set according to this setting upon each login.
     "CLAIM_MAPPING": {
         "first_name": "given_name",
         "last_name": "family_name",
-        "email": "email",
+        "email": "upn",
     },
-    'GROUPS_CLAIM': 'roles',
+    'GROUPS_CLAIM': 'groups',
     'MIRROR_GROUPS': True,
-    'USERNAME_CLAIM': 'email',
+    'USERNAME_CLAIM': 'upn',
     "BLOCK_GUEST_USERS": False,
     "CREATE_NEW_USERS": True,
     # Prevent REST API from triggering a login redirect
