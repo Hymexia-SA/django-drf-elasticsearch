@@ -138,10 +138,11 @@ AUTH_ADFS = {
     'GROUPS_CLAIM': 'groups',
     'MIRROR_GROUPS': True,
     'USERNAME_CLAIM': 'upn',
-    "BLOCK_GUEST_USERS": False,
-    "CREATE_NEW_USERS": True,
+    'GUEST_USERNAME_CLAIM': 'email',
+    'BLOCK_GUEST_USERS': False,
+    'CREATE_NEW_USERS': True,
     # Prevent REST API from triggering a login redirect
-    "LOGIN_EXEMPT_URLS": ["^blog"],
+    'LOGIN_EXEMPT_URLS': ["^blog"],
 }
 
 # Configure django to redirect users to the right URL for login
